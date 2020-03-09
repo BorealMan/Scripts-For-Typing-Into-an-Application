@@ -1,0 +1,84 @@
+from pynput.keyboard import Key, Controller as keyboardController
+from pynput.mouse import Button, Controller as mouseController
+import time
+from datetime import datetime
+
+keyboard = keyboardController()
+mouse = mouseController()
+
+#In order for this to work for you, you must first find the cordinates of the following (using Mouse_Position.py)
+#Mouse Position1 (x,y = is the position to bring up discord from the task bar)
+#Mouse Position2 (x1,x2 = The position of your discord text box)
+#Use the Mouse_Position.py Script to find the cordinates you will need for this part.
+x,y = -1358, 1067
+x1,y1 = -1029, 849
+
+
+def useMouse(x,y,x1,y1):
+
+	pos = mouse.position # Storing old mouse position
+	(old_x,old_y) = pos
+	mouse.press(Button.left)
+	mouse.release(Button.left)
+
+	mouse.position = (x,y) # Click program on task bar
+	mouse.press(Button.left)
+	mouse.release(Button.left)
+
+	mouse.position = (x1, y1) # Click on chatbox
+	mouse.press(Button.left)
+	mouse.release(Button.left)
+
+	mouse.position = (old_x,old_y) # Moves Mouse back to original position
+	
+
+def Type(text):
+
+	keyboard.type(text)
+	keyboard.press(Key.enter)
+	keyboard.release(Key.enter)
+
+def timeStamp():
+	dateTimeObj = datetime.now()
+	timeObj = dateTimeObj.time()
+	timeStr = timeObj.strftime("%H:%M:%S")
+	print(timeStr)
+
+
+def Engine(command, secs):
+	
+	counter = 0
+	##MAIN
+	while(True):
+		
+		timeStamp()
+		print('{}{}{}'.format("We're up and running. \nCurrently we've completed " , counter, " runs."))	
+
+		useMouse(x, y, x1, y1)
+
+		time.sleep(.5)
+		Type(command)
+		time.sleep(secs)
+		counter += 1
+
+class Boss:
+	def __init__(self, name, command, killTime):
+		self.name = name
+		self.command = command
+		self.killTime = killTime
+
+#Creating Boss Objects for later use.
+corp = Boss('Corperal Beast', '+m kill corp', 60*32)
+bandos = Boss('Bandos','+m kill bandos', 60*33)
+arma = Boss('Armadyl','+m kill arma', 60*33)
+zammy = Boss('Zammy','+m kill zammy', 60*33)
+
+##################################################################################
+#WARNING: You can only use one of these at a time.
+#To Switch between them, uncomment the one to run and comment out the rest,
+#Otherwise it will run them all.
+
+#Engine(corp.command, corp.killTime)
+Engine(bandos.command, bandos.killTime)
+#Engine(arma.command, arma.killTime)
+#Engine(zammy.command, zammy.killTime)
